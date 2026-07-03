@@ -73,14 +73,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.SetIsOriginAllowed(origin =>
-              {
-                  var host = new Uri(origin).Host;
-                  return host == "localhost" || host == "127.0.0.1";
-              })
+        policy.AllowAnyOrigin()
               .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials();
+              .AllowAnyHeader();
     });
 });
 
@@ -121,6 +116,14 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+// Auto-apply any pending EF Core migrations on startup
+// This ensures the database schema is always up-to-date without needing to run dotnet-ef CLI
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
+
 // Custom Global Exception Handler Middleware must be registered FIRST to catch all downstream errors
 app.UseMiddleware<ExceptionMiddleware>();
 
@@ -131,7 +134,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection in development (Nginx handles HTTPS in production)
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 // Enable CORS for frontend client requests before authentication/authorization checking
 app.UseCors("AllowReactApp");
