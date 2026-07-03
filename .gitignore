@@ -1,0 +1,50 @@
+# ==========================================
+# C# (.NET Core) Ignore Rules
+# ==========================================
+# Build folders
+[Bb]in/
+[Oo]bj/
+[Tt]est[Rr]esults/
+
+# IDE files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.idea/
+*.userprefs
+*.mono
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# ==========================================
+# Node.js (React/Vite) Ignore Rules
+# ==========================================
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================================
+# Operating System files
+# ==========================================
+Thumbs.db
+.DS_Store
+desktop.ini
